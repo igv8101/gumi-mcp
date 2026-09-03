@@ -1,0 +1,19 @@
+# Estado e artefatos locais — nunca versionados
+data/
+logs/
+.venv/
+__pycache__/
+*.pyc
+*.zip
+.pytest_cache/
+
+# Nomes de pastas privadas deste workspace específico (ver config.py)
+privado.local.json
+
+# Notas de trabalho internas
+ESTADO.md
+CLAUDE.md
+ANALISE_E_ARQUITETURA_*.md
+*.bak-*
+alvos.local.json
+termos.local.txt
