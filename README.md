@@ -2,7 +2,7 @@
 
 **Servidor MCP local, somente leitura, que expõe um repositório a agentes de IA sem expor os dados que vivem dentro dele.**
 
-[![testes](https://github.com/AKIsClaw/gumi-mcp/actions/workflows/testes.yml/badge.svg)](https://github.com/AKIsClaw/gumi-mcp/actions/workflows/testes.yml)
+[![testes](https://github.com/usuario-teste/gumi-mcp/actions/workflows/testes.yml/badge.svg)](https://github.com/usuario-teste/gumi-mcp/actions/workflows/testes.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
@@ -79,7 +79,7 @@ legítimo continue de pé.
 ## Instalação
 
 ```bash
-git clone https://github.com/AKIsClaw/gumi-mcp
+git clone https://github.com/usuario-teste/gumi-mcp
 cd gumi-mcp
 python -m venv .venv && .venv/Scripts/activate      # Linux/macOS: source .venv/bin/activate
 pip install -r requirements.txt

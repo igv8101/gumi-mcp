@@ -45,7 +45,17 @@ def passo(numero, texto):
 
 # ============================================================
 
-def quem_sou_eu() -> tuple[str, str] | None:
+def quem_sou_eu() -> tuple[str, str, str] | None:
+    """Devolve (usuario, nome, email_de_commit).
+
+    O email do commit fica gravado no historico PARA SEMPRE e e publico, entao
+    aqui se usa o endereco noreply do GitHub em vez de um e-mail real.
+
+    Detalhe que passa batido: em contas criadas depois de 18/07/2017 o noreply
+    precisa do ID numerico na frente (`ID+usuario@users.noreply.github.com`).
+    Sem o ID, o GitHub nao liga os commits ao perfil - e o grafo de
+    contribuicoes fica vazio, que e justamente o que se quer mostrar.
+    """
     resultado = rodar([GH, "api", "user"])
     if resultado.returncode != 0:
         return None
@@ -53,7 +63,17 @@ def quem_sou_eu() -> tuple[str, str] | None:
         dados = json.loads(resultado.stdout)
     except json.JSONDecodeError:
         return None
-    return dados.get("login"), (dados.get("name") or dados.get("login"))
+
+    usuario = dados.get("login")
+    nome = dados.get("name") or usuario
+    identificador = dados.get("id")
+
+    if identificador:
+        email = f"{identificador}+{usuario}@users.noreply.github.com"
+    else:
+        email = f"{usuario}@users.noreply.github.com"
+
+    return usuario, nome, email
 
 
 def ajustar_identidade(usuario: str, nome: str) -> list[str]:
@@ -86,8 +106,9 @@ def principal() -> int:
     if not identidade:
         print("    NAO AUTENTICADO. Rode primeiro:  gh auth login")
         return 1
-    usuario, nome = identidade
+    usuario, nome, email_commit = identidade
     print(f"    logado como {usuario} ({nome})")
+    print(f"    e-mail dos commits: {email_commit}")
 
     passo(2, "Ajustando README e LICENSE com o seu nome")
     for linha in ajustar_identidade(usuario, nome) or ["nada a mudar"]:
@@ -122,10 +143,13 @@ def principal() -> int:
     tem_mudanca = rodar(["git", "diff", "--cached", "--quiet"]).returncode != 0
     if tem_mudanca:
         rodar([
-            "git", "-c", f"user.name={nome}", "-c", "user.email="
-            + f"{usuario}@users.noreply.github.com",
+            "git", "-c", f"user.name={nome}", "-c", f"user.email={email_commit}",
             "commit", "-q", "-m", "Ajusta identidade do repositorio",
         ])
+        # Fixa a identidade NESTE repo, para os proximos commits tambem
+        # sairem com o noreply e serem atribuidos ao perfil.
+        rodar(["git", "config", "user.name", nome])
+        rodar(["git", "config", "user.email", email_commit])
         print("    commitado")
     else:
         print("    nada a commitar")
