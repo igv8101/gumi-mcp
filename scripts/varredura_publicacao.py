@@ -24,7 +24,10 @@ PROIBIDOS = [
     (r"C:\\Users\\[A-Za-z0-9_.-]+", "caminho absoluto de uma maquina Windows"),
     (r"/home/[a-z][A-Za-z0-9_.-]*", "caminho absoluto de uma maquina Unix"),
     (r"/Users/[A-Za-z0-9_.-]+", "caminho absoluto de um Mac"),
-    (r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", "endereco de e-mail"),
+    # E-mail real. O noreply do GitHub fica de fora: ele existe justamente
+    # para NAO expor endereco, entao casar com ele seria o contrario do ponto.
+    (r"\b[A-Za-z0-9._%+-]+@(?!users\.noreply\.github\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
+     "endereco de e-mail"),
     (r"(?i)\b(api[_-]?key|secret|password|senha|token)\s*[:=]\s*['\"][^'\"]{6,}", "credencial literal"),
     (r"ghp_[A-Za-z0-9]{20,}", "token do GitHub"),
     (r"sk-[A-Za-z0-9]{20,}", "chave de API"),
